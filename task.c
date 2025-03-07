@@ -95,20 +95,17 @@ double* num_from_file_to_arr(const char* filename, int* amount) {
     double number;
     *amount = 0;
 
-    // Считаем количество чисел в файле
     while (fscanf(file, "%lf", &number) == 1) {
         (*amount)++;
     }
 
-    // Если файл пуст, возвращаем NULL
     if (*amount == 0) {
         fclose(file);
         return NULL;
     }
 
-    rewind(file);  // Возвращаемся в начало файла
+    rewind(file);
 
-    // Выделяем память под массив
     double* arr = malloc(sizeof(double) * (*amount));
     if (arr == NULL) {
         perror("Error allocating memory");
@@ -116,7 +113,6 @@ double* num_from_file_to_arr(const char* filename, int* amount) {
         return NULL;
     }
 
-    // Читаем числа в массив
     for (int i = 0; i < *amount; i++) {
         if (fscanf(file, "%lf", &arr[i]) != 1) {
             perror("Error reading file");
@@ -132,35 +128,30 @@ double* num_from_file_to_arr(const char* filename, int* amount) {
 
 // Циклический сдвиг массива на k позиций вправо
 void cyclic_shift(double arr[], int n, int k) {
-    k = k % n;  // Убедимся, что k не превышает размер массива
-    if (k == 0) return;  // Если сдвиг не нужен
+    k = k % n;
+    if (k == 0) return;
 
-    // Создаем временный массив для хранения последних k элементов
     double* temp = malloc(sizeof(double) * k);
     if (temp == NULL) {
         perror("Error allocating memory");
         return;
     }
 
-    // Копируем последние k элементов во временный массив
     for (int i = 0; i < k; i++) {
         temp[i] = arr[n - k + i];
     }
 
-    // Сдвигаем элементы вправо
     for (int i = n - 1; i >= k; i--) {
         arr[i] = arr[i - k];
     }
 
-    // Восстанавливаем первые k элементов из временного массива
     for (int i = 0; i < k; i++) {
         arr[i] = temp[i];
     }
 
-    free(temp);  // Освобождаем временный массив
+    free(temp);
 }
 
-// Запись массива в файл
 void write_arr_to_file(const char* filename, double arr[], int amount) {
     FILE* file = fopen(filename, "w");
     if (file == NULL) {
@@ -169,13 +160,12 @@ void write_arr_to_file(const char* filename, double arr[], int amount) {
     }
 
     for (int i = 0; i < amount; i++) {
-        fprintf(file, "%lf ", arr[i]);  // Записываем числа через пробел
+        fprintf(file, "%lf ", arr[i]);
     }
 
     fclose(file);
 }
 
-// Основная функция для сдвига чисел в файле
 void shift_num_in_file(const char* filename, int q) {
     int amount;
     puts("Shift value");
@@ -186,8 +176,8 @@ void shift_num_in_file(const char* filename, int q) {
         return;
     }
 
-    cyclic_shift(arr, amount, k);  // Выполняем циклический сдвиг
-    write_arr_to_file(filename, arr, amount);  // Записываем результат в файл
+    cyclic_shift(arr, amount, k);
+    write_arr_to_file(filename, arr, amount);
 
-    free(arr);  // Освобождаем память
+    free(arr);
 }
