@@ -94,7 +94,7 @@ double* num_from_file_to_arr(const char* filename, int* amount) {
 
     double number;
     *amount = 0;
-
+1
     while (fscanf(file, "%lf", &number) == 1) {
         (*amount)++;
     }
